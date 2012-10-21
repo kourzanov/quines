@@ -39,9 +39,9 @@
        (let* ((expected expected-result)
               (produced tested-expression))
          (or (equal? expected produced)
-             (errorf 'test-check
-               "Failed: ~a~%Expected: ~a~%Computed: ~a~%"
-               'tested-expression expected produced)))))))
+             (error 'test-check "Failed:"
+               (format "~a~%Expected: ~a~%Computed: ~a~%"
+               'tested-expression expected produced))))))))
 
 (define pkg (lambda (cls thk) (cons cls thk)))
 (define pkg-clause (lambda (pkg) (car pkg)))

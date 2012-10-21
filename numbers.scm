@@ -1,3 +1,9 @@
+(module numbers
+   (import bigloo-support)
+   (export build-num
+           *o minuso zeroo poso
+	   appendo))
+
 (load "mk.scm")
 
 (define build-num
@@ -190,7 +196,8 @@
          (== `(,b . ,n^) h)
          (== '() l)))
       ((fresh (n^)
-         (==  `(1 . ,n^) n)
+         (==;  
+	    `(1 . ,n^) n)
          (== '() r)
          (== n^ h)
          (== '(1) l)))
@@ -257,8 +264,19 @@
              (pluso bq r n)
              (<o n bq1))))))))
 
+(define appendo
+  (lambda (l s out)
+    (conde
+      [(== '() l) (== s out)]
+      [(fresh (a d res)
+         (== `(,a . ,d) l)
+         (== `(,a . ,res) out)
+         (appendo d s res))])))
+
+
 (define exp2
-   (lambda (n b q)
+  ; 
+  (lambda (n b q)
      (conde
        ((== '(1) n) (== '() q))
        ((>1o n) (== '(1) q)

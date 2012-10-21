@@ -1,3 +1,5 @@
+(module quines
+   (import bigloo-support))
 (load "mk.scm")
 
 (define eval-expo

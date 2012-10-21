@@ -10,9 +10,9 @@
        (let* ((expected expected-result)
               (produced tested-expression))
          (or (equal? expected produced)
-             (errorf 'test-check
-               "Failed: ~a~%Expected: ~a~%Computed: ~a~%"
-               'tested-expression expected produced)))))))
+             (error 'test-check "Failed:"
+               (format "~a~%Expected: ~a~%Computed: ~a~%"
+               'tested-expression expected produced))))))))
 
 (define a->s (lambda (a) (car a)))
 (define a->c* (lambda (a) (cadr a)))
@@ -49,23 +49,23 @@
           (let ((a^ a-inf)) e2))
          (else (let ((a (car a-inf)) (f (cdr a-inf))) 
                  e3)))))))
-(define take
+(define take'
   (lambda (n f)
     (cond
       ((and n (zero? n)) '())
       (else
        (case-inf (f)
          (() '())
-         ((f) (take n f))
+         ((f) (take' n f))
          ((a) (cons a '()))
-         ((a f) (cons a (take (and n (- n 1)) f))))))))
+         ((a f) (cons a (take' (and n (- n 1)) f))))))))
 
 (define empty-a '(() () ()))
   
 (define-syntax run
   (syntax-rules ()
     ((_ n (x) g0 g ...)
-     (take n
+     (take' n
        (lambdaf@ ()
          ((fresh (x) g0 g ...
             (lambdag@ (final-a)

@@ -1,3 +1,5 @@
+(module talk
+   (import bigloo-support numbers))
 ;;; language intro
 
 (load "mk.scm")
@@ -81,33 +83,26 @@
 
 ;;; append
 
-(define append
+(define append'
   (lambda (l s)
     (cond
       [(null? l) s]
-      [else (cons (car l) (append (cdr l) s))])))
+      [else (cons (car l) (append' (cdr l) s))])))
 
 (load "dmatch.scm")
 
-(define append
+(define append'
   (lambda (l s)
     (dmatch l
       [() s]
-      [(,a . ,d) (cons a (append d s))])))
+      [(,a . ,d) (cons a (append' d s))])))
 
-(append '(a b c) '(d e))
+(append' '(a b c) '(d e))
 
 
 (load "mk.scm")
 
-(define appendo
-  (lambda (l s out)
-    (conde
-      [(== '() l) (== s out)]
-      [(fresh (a d res)
-         (== `(,a . ,d) l)
-         (== `(,a . ,res) out)
-         (appendo d s res))])))
+
 
 (run* (q) (appendo '(a b c) '(d e) q))
 
@@ -123,6 +118,8 @@
 ;;; numbers
 
 (load "numbers.scm")
+;(exit)
+
 
 (build-num 5)
 

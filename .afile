@@ -1,0 +1,10 @@
+;; automatically generated, don't edit
+;; /home/pjotr/scheme/Friedman/quines.git
+;; Sun Oct 21 13:56:30 2012
+
+(
+  (helpers "/home/pjotr/scheme/helpers.scm")
+  (bigloo-support "bigloo-support.scm")
+  (numbers "numbers.scm")
+)
+

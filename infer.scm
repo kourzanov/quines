@@ -1,3 +1,6 @@
+(module infer
+   (import bigloo-support))
+
 (load "mk.scm")
 
 (define !-
