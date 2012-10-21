@@ -15,7 +15,7 @@
                'tested-expression expected produced))))))))
 
 (define a->s (lambda (a) (car a)))
-(define a->c* (lambda (a) (cadr a)))
+(define a->cs (lambda (a) (cadr a)))
 (define a->t (lambda (a) (caddr a)))
 
 (define-syntax lambdag@
@@ -23,7 +23,7 @@
     ((_ (a) e) (lambda (a) e))
     ((_ (a : s c* t) e)
      (lambda (a)
-       (let ((s (a->s a)) (c* (a->c* a)) (t (a->t a)))
+       (let ((s (a->s a)) (c* (a->cs a)) (t (a->t a)))
          e)))))
 
 (define mzero (lambda () #f))
@@ -217,7 +217,7 @@
       (cond
         ((null? x*) `(,s ,c* ,t))
         (else
-         (let ((c*/t (subsume-c*/t (car x*) s c* t)))
+         (let ((c*/t (subsume-cs/t (car x*) s c* t)))
            (loop (cdr x*) (car c*/t) (cdr c*/t))))))))
 
 (define rem-dups
@@ -237,7 +237,7 @@
          (eq? (lhs pr-t) x)
          (pred tag))))))
 
-(define subsume-c*/t
+(define subsume-cs/t
   (lambda (x s c* t)
     (cond
       ((exists (have-flat-tag? (lambda (u) (eq? u 'sym)) x) t)
@@ -374,7 +374,7 @@
 (define verify-c*-aux
   (lambda (c c0* s)
     (cond
-      ((unify* c s) =>
+      ((unifys c s) =>
        (lambda (s0)
          (and (not (eq? s0 s))
            (cons (prefix-s s0 s) c0*))))
@@ -422,13 +422,13 @@
              (if (var? u) (walk u s) u)))
         (else x)))))
 
-(define walk*
+(define walks
   (lambda (v s)
     (let ((v (if (var? v) (walk v s) v)))
       (cond
         ((var? v) v)
         ((pair? v)
-         (cons (walk* (car v) s) (walk* (cdr v) s)))
+         (cons (walks (car v) s) (walks (cdr v) s)))
         (else v)))))
 
 (define unify
@@ -491,7 +491,7 @@
 (define reify
   (lambda (x)
     (lambdag@ (a : s c* t)
-      (let ((v (walk* x s)))
+      (let ((v (walks x s)))
         (let ((r (reify-s v)))
           (reify-aux r v
             (let ((c* (remp
@@ -506,13 +506,13 @@
 
 (define reify-aux
   (lambda (r v c* t)
-    (let ((v (walk* v r))
-          (c* (walk* c* r))
-          (t (walk* t r)))
+    (let ((v (walks v r))
+          (c* (walks c* r))
+          (t (walks t r)))
       (let ((c* (sorter (map sorter c*)))
             (p* (sorter
                   (map sort-t-vars
-                    (partition* t)))))
+                    (partitions t)))))
         (cond
           ((and (null? c*) (null? p*)) v)
           ((null? c*) `(,v . ,p*))
@@ -565,7 +565,7 @@
         (else (rem-subsumed (cdr c*)
                 (cons (car c*) c^*)))))))
 
-(define unify*
+(define unifys
   (lambda (c s)
     (unify (map lhs c) (map rhs c) s)))
  
@@ -574,7 +574,7 @@
     (cond
       ((null? c*) #f)
       (else
-        (let ((c^ (unify* (car c*) c)))
+        (let ((c^ (unifys (car c*) c)))
           (or
             (and c^ (eq? c^ c))
             (subsumed? c (cdr c*))))))))
@@ -583,7 +583,7 @@
   (lambda (tag t x* y*)
     (cond
      ((null? t)
-      (cons `(,tag . ,x*) (partition* y*)))
+      (cons `(,tag . ,x*) (partitions y*)))
      ((eq? (pr-t->tag (car t)) tag)
       (let ((x (lhs (car t))))
         (let ((x* (cond
@@ -594,7 +594,7 @@
       (let ((y* (cons (car t) y*)))
         (part tag (cdr t) x* y*))))))
 
-(define partition*
+(define partitions
   (lambda (t)
     (cond
       ((null? t) '())
@@ -605,7 +605,7 @@
   (syntax-rules ()
     ((_ (x ...) g g* ...)  
      (lambdag@ (a : s c* t)
-       (let ((x (walk* x s)) ...)
+       (let ((x (walks x s)) ...)
          ((fresh () g g* ...) a))))))
 
 (define-syntax conda

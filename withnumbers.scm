@@ -1,5 +1,5 @@
-(load "mk.scm")
-(load "numbers.scm")
+;(module with-numbers (import numbers))
+;(load "mk.scm")
 
 (define number-primo
   (lambda (exp env val)

@@ -1,5 +1,14 @@
-(module quines
-   (import bigloo-support))
+#! /usr/bin/env bgl
+; the beginning
+(module q
+  (import bigloo-support))
+
+(load "synrules.sch")
+(load "dodger.sch")
+(load "cases.scm")
+(load "forall.scm")
+(load "helpers.scm")
+(load "bigloo-support.scm")
 (load "mk.scm")
 
 (define eval-expo
@@ -10,11 +19,11 @@
          (not-in-envo 'quote env)
          (noo 'closure v)
          (== v val)))
-      ((fresh (a*)
-         (== `(list . ,a*) exp)
+      ((fresh (as)
+         (== `(list . ,as) exp)
          (not-in-envo 'list env)
-         (noo 'closure a*)
-         (proper-listo a* env val)))
+         (noo 'closure as)
+         (proper-listo as env val)))
       ((symbolo exp) (lookupo exp env val))
       ((fresh (rator rand x body env^ a)
          (== `(,rator ,rand) exp)
@@ -197,3 +206,5 @@
         (not (equal? q r))
         (not (equal? r p)))))
   #t)
+
+; the end

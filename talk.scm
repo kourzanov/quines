@@ -74,7 +74,7 @@
 (run* (q) (symbolo q) (numbero q))
 
 
-(load "mk.scm")
+;(load "mk.scm")
 
 (run 1 (q)
   (== `(3 (closure x (x x) ((y . 7))) #t) q)
@@ -100,7 +100,7 @@
 (append' '(a b c) '(d e))
 
 
-(load "mk.scm")
+;(load "mk.scm")
 
 
 
@@ -136,7 +136,7 @@
 
 ;;;
 
-(load "dmatch.scm")
+;(load "dmatch.scm")
 
 (define eval-exp
   (lambda (exp env)
@@ -202,7 +202,7 @@
    (lambda (a) a))
  '())
 
-(load "mk.scm")
+;(load "mk.scm")
 
 (define eval-expo
   (lambda (exp env val)
@@ -258,7 +258,7 @@
 
 ;;; quine time!
 
-(load "mk.scm")
+;(load "mk.scm")
 
 (define eval-expo
   (lambda (exp env val)
