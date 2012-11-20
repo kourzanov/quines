@@ -1,14 +1,18 @@
 #! /usr/bin/env bgl
 ; the beginning
-(module q
-  (import bigloo-support))
-
+(cond-expand (bigloo-eval
+ (module q
+  (import bigloo-support)
+  ))
+(else (module q)
 (load "synrules.sch")
 (load "dodger.sch")
 (load "cases.scm")
 (load "forall.scm")
+(load "cond-expand.sch")
 (load "helpers.scm")
 (load "bigloo-support.scm")
+))
 (load "mk.scm")
 
 (define eval-expo
@@ -63,6 +67,12 @@
       (conde
         ((== y x) (== v t))
         ((=/= y x) (lookupo x rest t))))))
+
+(pp (run 1 (q) (eval-expo q '() q)))
+(pp ((lambda (_.0)
+   (list _.0 (list 'quote _.0)))
+  '(lambda (_.0)
+     (list _.0 (list 'quote _.0)))))
 
 (test-check "4 thrines"
   (run 4 (x)

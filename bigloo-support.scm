@@ -1,3 +1,4 @@
+; the beginning
 (module bigloo-support
    (library slib)
    (import helpers)
@@ -7,7 +8,6 @@
 	   list-sort
 	   add1 sub1
 	   for-all
-	   new-time
 	   div
 	   call-with-string-output-port)
    (eval (export-exports)))
@@ -42,18 +42,4 @@
             (and (apply f x (map car more))
                  (for-all (car ls) (cdr ls) (map cdr more))))))))
 
-(define new-time
-   (lambda (e)
-      (multiple-value-bind (r rt st ut)
-	 (time e)
-	 (display (format "~nreal:~vuser:~vsys:~v~n"
-			  (/fl (exact->inexact rt) 100.0)
-			  (/fl (exact->inexact ut) 100.0)
-			  (/fl (exact->inexact st) 100.0)))
-	 r)))
-
-(define-syntax time
-   (syntax-rules ()
-      ([_ e ...] (new-time (delay e ...)))
-      ))
-
+; the end
